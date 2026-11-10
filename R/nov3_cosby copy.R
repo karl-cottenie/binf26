@@ -28,8 +28,8 @@ theme_set(theme_light())
 # names for data frames (df_name), lists (ls_name), ... (Thanks Jacqueline May)
 
 # differentiate DNA transposons from other repetitive elements ----
-df_te_t_spir = read_csv("../data/2026-10-26_t_spiralis copy.csv")
-fa_t_spir = readDNAStringSet("../data/GCA_001447595.1_T1_ISS3_r1.0.fna copy")
+df_te_t_spir <- read_csv("../binf26/data/2026-10-26_t_spiralis copy 2.csv")
+fa_t_spir <- readDNAStringSet("../binf26/data/GCA_001447595.1_T1_ISS3_r1.0.fna copy 2")
 
 ls_non_te = c( "Simple_repeat",
                "Low_complexity", "Satellite",
@@ -44,7 +44,7 @@ ls_dna_te
 
 ls_dna_te = ls_dna_te[str_detect(ls_dna_te, "^DNA")]
 
-#df_te_t_spir |> 
+df_te_t_spir |> 
   mutate(te_class = if_else(matching_class %in% ls_non_te, "other repetitive",
                             # nesting if_else statements
                             if_else(matching_class %in% ls_dna_te, "dna", "retro")),
@@ -72,6 +72,16 @@ df_te_t_spir |>
 
 set.seed(217)
 
+dfSeq2 <- df_te_t_spir %>%
+  mutate(nucleotides2 = str_remove(nucl_seq, "^[-N]+")) %>%
+  mutate(nucleotides2 = str_remove(nucleotides2, "[-N]+$")) %>%
+  mutate(nucleotides2 = str_remove_all(nucleotides2, "-+")) %>%
+  filter(str_count(nucleotides2, "N") <= (0.05 * str_count(nucl_seq)))
+dfSeq2 <- as.data.frame(dfSeq2)
+dfSeq2$nucleotides2 <- DNAStringSet(dfSeq2$nucleotides2)
+
+dfSeq2 <- cbind(dfSeq2, as.data.frame(letterFrequency(dfSeq2$nucleotides2, letters = c("A", "C","G", "T"))))
+
 dfValidation2 <- dfSeq2 %>%
   mutate(te_class = if_else(matching_class %in% ls_non_te, "other repetitive",
                             # nesting if_else statements
@@ -81,6 +91,7 @@ dfValidation2 <- dfSeq2 %>%
   sample_n(20)
 
 set.seed(13)
+
 dfTraining2 <- dfSeq2 %>%
   filter(!qry_id %in% dfValidation2$qry_id) %>%
   mutate(te_class = if_else(matching_class %in% ls_non_te, "other repetitive",
@@ -91,16 +102,6 @@ dfTraining2 <- dfSeq2 %>%
   sample_n(62)
 
 table(dfTraining2$te_class)
-
-dfSeq2 <- df_te_t_spir %>%
-  mutate(nucleotides2 = str_remove(nucl_seq, "^[-N]+")) %>%
-  mutate(nucleotides2 = str_remove(nucleotides2, "[-N]+$")) %>%
-  mutate(nucleotides2 = str_remove_all(nucleotides2, "-+")) %>%
-  filter(str_count(nucleotides2, "N") <= (0.05 * str_count(nucl_seq)))
-dfSeq2 <- as.data.frame(dfSeq2)
-dfSeq2$nucleotides2 <- DNAStringSet(dfSeq2$nucleotides2)
-
-dfSeq2 <- cbind(dfSeq2, as.data.frame(letterFrequency(dfSeq2$nucleotides2, letters = c("A", "C","G", "T"))))
 
 dfSeq2$Aprop <- (dfSeq2$A) / (dfSeq2$A + dfSeq2$T + dfSeq2$C + dfSeq2$G)
 
