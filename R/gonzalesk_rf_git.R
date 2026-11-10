@@ -1,5 +1,5 @@
 ##***************************
-## title
+## Random Forest Github
 ##
 ## Kristian Gonzales
 ##
@@ -17,21 +17,14 @@ theme_set(theme_light())
 
 # Startup ends here
 
-## _ Comment codes ------
-# Coding explanations (#, often after the code, but not exclusively)
-# Code organization (## XXXXX -----)
-# Justification for a section of code ## XXX
-# Dead end analyses because it did not work, or not pursuing this line of inquiry (but leave it in as a trace of it, to potentially solve this issue, or avoid making the same mistake in the future # (>_<) 
-# Solutions/results/interpretations (#==> XXX)
-# Reference to manuscript pieces, figures, results, tables, ... # (*_*)
-# TODO items #TODO
-# names for data frames (df_name), lists (ls_name), ... (Thanks Jacqueline May)snippet lib
-library(title)
 
 
 ## Differentiate the two most common repeat_id groups? (Random forest)
 #2026_11_10 Kristian Gonzales Active participation
 
+usethis::git_remotes()
+usethis::git_sitrep()
+usethis::pr_push()
 
 
 
@@ -51,3 +44,6 @@ df_rpid_pdiv <-  df_te_tspiralis |>
 
 ggplot(df_rpid_pdiv) +
   geom_boxplot(aes(x = repeat_id, y = perc_div))
+
+#test
+count()
