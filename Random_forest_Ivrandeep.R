@@ -19,7 +19,6 @@ table(df_rf$te_class)
 df_rf <- df_rf |>
   mutate(row_id = row_number())
 
-
 ## create validation dataset -------
 
 set.seed(217)
