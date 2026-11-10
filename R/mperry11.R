@@ -17,3 +17,4 @@ library(Biostrings)
 theme_set(theme_light())
 
 dfBOLD <- read_tsv("../data/wasps.tsv")
+View(dfBOLD)
