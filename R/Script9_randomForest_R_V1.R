@@ -291,5 +291,3 @@ rm(dfCOI28S, dfCotesia, dfSeq, dfTraining, dfValidation, gene_classifier, gene_c
 data()
 
 #Have fun, and share your classifier with the class! You can post about what you did to the Discussion Board on CourseLink.
-
-######  hellooooo
