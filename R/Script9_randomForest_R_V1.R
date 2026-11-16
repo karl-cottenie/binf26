@@ -43,15 +43,15 @@ theme_set(theme_light())
 library(tidyverse)
 
 #install randomForest package, if needed, and load library.
-#install.packages("randomForest")
+install.packages("randomForest")
 library(randomForest)
 
 #Package from Bioconductor:
 
 #These are the lines to install Bioconductor packages for recent versions of R. Then, load library.
-#install.packages("BiocManager")
-#library(BiocManager)
-#BiocManager::install("Biostrings")
+install.packages("BiocManager")
+library(BiocManager)
+BiocManager::install("Biostrings")
 library(Biostrings)
 
 ####3 - LOADING, CHECKING PARSING, AND FILTERING DATA----
@@ -61,9 +61,10 @@ library(Biostrings)
 
 #This is the code I used to write to disk.
 #write_tsv(wasps, "wasps.tsv")
-
+library(tidyverse)
 #Now, we can read the provided tsv back in so that we all have exactly the same file.
-dfBOLD <- read_tsv("../data/wasps.tsv")
+dfBOLD <- read_tsv("../data/wasps.tsv", locale = locale(encoding = "latin1"))
+view(dfBOLD)
 
 #You should now see in your global environment a df with 6,542 observations of 80 variables.
 
@@ -154,7 +155,7 @@ rm(dfSeqCompare)
 dfSeq <- as.data.frame(dfSeq)
 dfSeq$nucleotides2 <- DNAStringSet(dfSeq$nucleotides2)
 class(dfSeq$nucleotides2)
-
+library(Biostrings)
 #Calculating the nucleotide frequencies and appending onto our dataframe using cbind(). Here, we are using letterFrequency, rather than alphabetFrequency, as we don't want the Ns (remember we may still have up to 5% Ns in a given sequence, given our above filtering steps), and other uncertain characters included at this stage. (We could use a more stringent filter on Ns if we have a large sample size, such as in a sensitivity analysis or future study.)
 dfSeq <- cbind(dfSeq, as.data.frame(letterFrequency(dfSeq$nucleotides2, letters = c("A", "C","G", "T"))))
 
@@ -215,7 +216,7 @@ set.seed(13)
 dfTraining <- dfCotesia %>%
   filter(!processid %in% dfValidation$processid) %>%
   group_by(markercode) %>%
-  sample_n(62)
+  sample_n(61)
 
 #Checking we should have 62 records of each gene
 table(dfTraining$markercode)
@@ -248,6 +249,8 @@ gene_classifier$confusion
 gene_classifier$votes
 
 #This worked so well, let's actually try with just 2 features
+install.packages("randomForest::")
+library(randomForest)
 gene_classifier2 <- randomForest(x = dfTraining[, 86:87], y = as.factor(dfTraining$markercode), ntree = 50, importance = TRUE)
 gene_classifier2
 #still perfect performance.
