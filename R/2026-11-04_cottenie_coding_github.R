@@ -1,5 +1,5 @@
 ##***************************
-## example of github code
+## example of giusthub code
 ##
 ## Karl Cottenie
 ##
